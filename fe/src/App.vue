@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { onMounted, provide, ref } from "vue";
 import TodoInput from "./components/TodoInput.vue";
+import TodoItem from "./components/TodoItem.vue";
 
-let todos = ref<string[]>([]);
+const todos = ref<string[]>([]);
+const updateIndex = ref<number | null>(null);
 
 const addTodo = (todo: string) => {
   todos.value.push(todo);
@@ -16,6 +18,18 @@ onMounted(async () => {
 
   todos.value = [...(data.todos as string[])];
 });
+
+const updateTodo = (index: number) => {
+  updateIndex.value = index;
+};
+
+const removeTodo = async (index: number) => {
+  const data = await fetch(`http://localhost:3000/${index}`, {
+    method: "DELETE",
+  }).then((res) => res.json());
+  console.log(data);
+  todos.value = todos.value.filter((_todo, idx) => idx !== index);
+};
 </script>
 
 <template>
@@ -23,6 +37,12 @@ onMounted(async () => {
   <TodoInput />
 
   <ul>
-    <li v-for="todo in todos" :key="todo">{{ todo }}</li>
+    <TodoItem
+      v-for="(todo, index) in todos"
+      :todo="todo"
+      :index="index"
+      :updateTodo="updateTodo"
+      :delete-todo="removeTodo"
+    />
   </ul>
 </template>

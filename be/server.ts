@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const todos = ["todo1", "todo2", "todo3", "todo4"];
+let todos = ["todo1", "todo2", "todo3", "todo4"];
 
 app.get("/", (req, res) => {
   return res.json({ todos });
@@ -20,6 +20,19 @@ app.post("/", (req, res) => {
   todos.push(todo.todo);
 
   return res.json({ body: req.body });
+});
+
+app.patch("/:idx", (req, res) => {
+  console.log(req.params);
+
+  return res.json({ msg: "Success" });
+});
+
+app.delete("/:idx", (req, res) => {
+  const idx = +req.params.idx;
+  todos = todos.filter((_todo, index) => index !== idx);
+
+  return res.json({ msg: "Succcess" });
 });
 
 app.listen(3000, () => {

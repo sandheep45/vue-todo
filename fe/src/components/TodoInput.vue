@@ -1,30 +1,34 @@
 <script setup lang="ts">
-import { inject, ref } from "vue";
+import useTodoStore from "../stores/useTodoStore";
 
-let todo = ref("");
-
-const addTodo = inject<(todo: string) => void>("addTodo");
+const { todo } = useTodoStore();
 
 const handleSubmit = async () => {
-  const res = await fetch("http://localhost:3000/", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ todo: todo.value }),
-  });
-
-  const data = await res.json();
-  console.log(data);
-  addTodo && addTodo(todo.value);
+  console.log(todo);
+  // const res = await fetch("http://localhost:3000/", {
+  //   method: "POST",
+  //   headers: {
+  //     Accept: "application/json",
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({ todo: todo }),
+  // });
+  //
+  // const data = await res.json();
+  // console.log(data);
+  // addTodo(todo);
 };
 </script>
 
 <template>
   <form @submit.prevent="handleSubmit">
     <label for="todo">Enter todo</label>
-    <input id="todo" type="input" v-model="todo" />
+    <input
+      id="todo"
+      type="input"
+      @input="todo = ($event.target as HTMLInputElement).value"
+      :value="todo"
+    />
 
     <button>Submit</button>
   </form>
