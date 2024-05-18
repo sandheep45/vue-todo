@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-let todos = ["todo1", "todo2", "todo3", "todo4"];
+let todos = ["todo1", "todo2", "todo3", "todo4", "todo5"];
 
 app.get("/", (req, res) => {
   return res.json({ todos });
@@ -23,7 +23,9 @@ app.post("/", (req, res) => {
 });
 
 app.patch("/:idx", (req, res) => {
-  console.log(req.params);
+  todos = todos.map((todo, index) =>
+    index === +req.params.idx ? req.body.todo : todo,
+  );
 
   return res.json({ msg: "Success" });
 });

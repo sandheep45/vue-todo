@@ -1,35 +1,29 @@
 <script setup lang="ts">
-import { onMounted, provide, ref } from "vue";
+import { onMounted, toRefs } from "vue";
 import TodoInput from "./components/TodoInput.vue";
 import TodoItem from "./components/TodoItem.vue";
+import useTodosStore from "./stores/useTodosStore";
+import useTodoStore from "./stores/useTodoStore";
 
-const todos = ref<string[]>([]);
-const updateIndex = ref<number | null>(null);
+const todosStore = useTodosStore();
+const todoStore = useTodoStore();
 
-const addTodo = (todo: string) => {
-  todos.value.push(todo);
+const { updateTodo, removeTodo, getAllTodos } = todosStore;
+
+const { todos } = toRefs(todosStore);
+const { updateIndex } = toRefs(todoStore);
+
+const handleUpdateTodo = (todo: string, index: number) => {
+  if (updateIndex.value) {
+    return null;
+  }
+
+  return updateTodo(todo, index);
 };
-
-provide("addTodo", addTodo);
 
 onMounted(async () => {
-  const res = await fetch("http://localhost:3000/");
-  const data = await res.json();
-
-  todos.value = [...(data.todos as string[])];
+  await getAllTodos();
 });
-
-const updateTodo = (index: number) => {
-  updateIndex.value = index;
-};
-
-const removeTodo = async (index: number) => {
-  const data = await fetch(`http://localhost:3000/${index}`, {
-    method: "DELETE",
-  }).then((res) => res.json());
-  console.log(data);
-  todos.value = todos.value.filter((_todo, idx) => idx !== index);
-};
 </script>
 
 <template>
@@ -39,9 +33,10 @@ const removeTodo = async (index: number) => {
   <ul>
     <TodoItem
       v-for="(todo, index) in todos"
+      :key="index"
       :todo="todo"
       :index="index"
-      :updateTodo="updateTodo"
+      :updateTodo="handleUpdateTodo"
       :delete-todo="removeTodo"
     />
   </ul>

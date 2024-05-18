@@ -4,7 +4,7 @@ import { toRefs } from "vue";
 const props = defineProps<{
   todo: string;
   index: number;
-  updateTodo: (index: number) => void;
+  updateTodo: (todo: string, index: number) => void | null;
   deleteTodo: (index: number) => Promise<void>;
 }>();
 
@@ -16,7 +16,7 @@ const { todo, index, updateTodo, deleteTodo } = toRefs(props);
     <span>
       {{ todo }}
     </span>
-    <button @click="updateTodo(index)">Update</button>
+    <button @click="updateTodo(todo, index)">Update</button>
     <button @click="deleteTodo(index)">Delete</button>
   </li>
 </template>

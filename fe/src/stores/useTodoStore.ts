@@ -3,6 +3,7 @@ import { ref } from "vue";
 
 const useTodoStore = defineStore("todo", () => {
   const todo = ref("");
+  const updateIndex = ref<number | null>(null);
 
   const addTodo = (newTodo: string) => {
     console.log(newTodo);
@@ -10,7 +11,7 @@ const useTodoStore = defineStore("todo", () => {
     todo.value = newTodo;
   };
 
-  return { todo, addTodo };
+  return { todo, addTodo, updateIndex };
 });
 
 export default useTodoStore;
