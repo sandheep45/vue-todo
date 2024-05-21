@@ -1,7 +1,8 @@
 import { ref, toRefs, watch } from "vue";
 import useTodoStore from "./useTodoStore";
+import { defineStore } from "pinia";
 
-const useTodosStore = () => {
+const useTodosStore = defineStore("todos", () => {
   const todoStore = useTodoStore();
   const todos = ref<string[]>([]);
 
@@ -72,6 +73,6 @@ const useTodosStore = () => {
   };
 
   return { todos, updateTodo, removeTodo, addTodo, getAllTodos };
-};
+});
 
 export default useTodosStore;
